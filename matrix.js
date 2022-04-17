@@ -3,13 +3,19 @@ const ctx = canvas.getContext("2d");
 canvas.width = 200;
 canvas.height = 400;
 ctx.scale(20, 20);
-ctx.fillStyle = "black";
-ctx.fillRect(0, 0, canvas.width, canvas.height);
+
 const COLS = 10;
 const ROWS = 20;
 const columns = [];
 
 const letterSet = "abcdefghijklmnopqrstuvwxyz".split("");
+
+function drawCanvas(x, y, w, h) {
+  ctx.fillStyle = "black";
+  ctx.fillRect(x, y, w, h);
+}
+drawCanvas(0, 0, canvas.width, canvas.height);
+
 
 function random(max, min = 0) {
   min = Math.ceil(min);
@@ -18,9 +24,9 @@ function random(max, min = 0) {
 }
 
 class Column {
-  constructor(x, intv) {
+  constructor(x, delay) {
     this.x = x;
-    this.intv = intv;
+    this.delay = delay;
     this.chars = [];
   }
 }
@@ -35,36 +41,35 @@ class Char {
 
 // create columns
 for (let i = 0; i < COLS; i++) {
-  columns.push(new Column(i, random(1000, 100)));
+  columns.push(new Column(i, random(3000)));
   //columns[i].chars.push(new Char(letterSet[random(26)], i, 1));
 }
 
 function update() {
-  move();
   draw();
   requestAnimationFrame(update);
 }
 update();
 
-function move() {
-}
-
-columns.forEach((column, x, arr) => {
-  setInterval(() => {
-    column.chars.unshift(
-      new Char(
-        letterSet[random(letterSet.length - 1)], // type
-        x,                    // x pos
-        column.chars.length   // y pos
-      )
-    );
-  }, column.intv)
-})
+setInterval( () => {
+  columns.forEach((column, x, arr) => {
+    setTimeout(() => {
+  
+        column.chars.unshift(
+          new Char(
+            letterSet[random(letterSet.length - 1)], // type
+            x,                    // x pos
+            column.chars.length   // y pos
+          )
+        );
+    }, column.delay)
+  })
+}, 100)
 
 
 function draw() {
   columns.forEach((col, i) => {
-    if(col.chars.length === 0) return; // skip empty first row until it is created
+    if (col.chars.length === 0) return; // skip empty first row until it is created
     ctx.fillStyle = "lime";
     ctx.font = "1px Arial";
     ctx.fillText(
