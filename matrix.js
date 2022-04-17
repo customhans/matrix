@@ -75,11 +75,11 @@ function move() {
 }
 
 function draw() {
-  ctx.fillStyle = "rgba(0, 255, 0, 1)";
   ctx.font = "1px Arial";
-
+  
   columns.forEach((column, i) => {
     column.letters.forEach((letter, j) => {
+      ctx.fillStyle = `rgba(0, 255, 0, ${1 - 0.05 * letter.y})`;
       ctx.fillText(letter.char, letter.x, letter.y + 1);
     })
   })
