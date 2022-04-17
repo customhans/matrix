@@ -7,6 +7,7 @@ const COLS = 10;
 const ROWS = 20;
 
 const letterSet = "abcdefghijklmnopqrstuvwxyz".split("");
+document.querySelector("button").addEventListener("click", createColumns);
 
 function random(max, min = 0) {
   min = Math.ceil(min);
@@ -38,19 +39,24 @@ drawCanvas();
 
 
 
-const columns = [];
+let columns = [];
 
-(function createColumns() {
+function createColumns() {
   for (let x = 0; x < COLS; x++) {
+    let offset = random(10);
+
     columns.push(
       new Column(
         x,
         Array(random(5, 15)).fill()
-          .map((_, i) => new Letter(letterSet[random(25)], x, -i))
+          .map((_, i) => new Letter(letterSet[random(25)], x, -i - offset)),
+        //random(2000, 2000)
       )
     )
+    
   }
-})();
+}
+createColumns();
 
 
 
@@ -58,7 +64,7 @@ setInterval(() => {
   move();
   drawCanvas()
   draw();
-}, 1000)
+}, 100)
 
 function move() {
   columns.forEach(column => {
