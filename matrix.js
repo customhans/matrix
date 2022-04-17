@@ -4,26 +4,8 @@ canvas.height = 800;
 const ctx = canvas.getContext("2d");
 const COLS = 20;
 const ROWS = 40;
-
-function getRandom(n) {
-  return Math.floor(Math.random() * n);
-}
-
-const randomLetters = "abcdefghijklmnopqrstuvwxyz".split("");
-function getRandomLetter() {
-  const rand = getRandom(randomLetters.length);
-  return randomLetters[rand];
-}
-
-ctx.fillStyle = "black";
-ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+const RANDOM_LETTERS = "abcdefghijklmnopqrstuvwxyz".split("");
 const columns = [];
-
-setInterval(function() {
-  fillColumnsWithLetters();
-  draw();
-}, 100)
 
 class Column {
   constructor(x, y) {
@@ -40,17 +22,41 @@ class Letter {
   }
 }
 
-
-for (let i = 0; i < COLS; i++) {
-  columns.push(new Column(i * 20, 0))
+function getRandom(n) {
+  return Math.floor(Math.random() * n);
 }
+
+function getRandomLetter() {
+  const rand = getRandom(RANDOM_LETTERS.length);
+  return RANDOM_LETTERS[rand];
+}
+
+(function createColumns() {
+  for (let i = 0; i < COLS; i++) {
+    columns.push(new Column(i * 20, 0))
+  }
+})();
+
+
+function drawCanvas() {
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+drawCanvas();
+
+
+
+setInterval(function () {
+  fillColumnsWithLetters();
+  draw();
+}, 100)
 
 function fillColumnsWithLetters() {
   columns.forEach(column => {
-    setTimeout(function() {
+    setTimeout(function () {
       if (column.letters.length < ROWS) {
         column.letters.push(
-          new Letter( getRandomLetter() )
+          new Letter(getRandomLetter())
         );
       }
     }, column.v * 1000)
