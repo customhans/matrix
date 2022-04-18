@@ -3,7 +3,7 @@ import Char from "./lib/chars.js";
 import Column from "./lib/columns.js";
 
 onload = () => {
-  ctx.scale(17, 17);
+  ctx.scale(20, 20);
   Column.createStartColumns();
 }
 
