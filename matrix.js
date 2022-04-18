@@ -1,14 +1,17 @@
 const canvas = document.querySelector("canvas");
-canvas.width = 200;
-canvas.height = 400;
+canvas.width = 2000;
+canvas.height = 4000;
 const ctx = canvas.getContext("2d");
 ctx.scale(20, 20);
-const COLS = 10;
-const ROWS = 20;
+const COLS = 100;
+const ROWS = 200;
+const MIN_LENGTH = canvas.height / 20;
+const MAX_LENGTH = canvas.height / 20;
+const OPAC_FACTOR = 0.00025;
+let columns = [];
 
-//const letterSet = "abcdefghijklmnopqrstuvwxyz".split("");
-const letterSet = "0123456789".split("");
-document.querySelector("button").addEventListener("click", createColumns);
+//const LETTER_SET = "abcdefghijklmnopqrstuvwxyz".split("");
+const LETTER_SET = "0123456789".split("");
 
 function random(max, min = 0) {
   min = Math.ceil(min);
@@ -29,6 +32,7 @@ class Letter {
     this.char = char;
     this.x = x;
     this.y = y;
+    this.opac = 1;
   }
 }
 
@@ -39,53 +43,58 @@ function drawCanvas() {
 drawCanvas();
 
 
-
-let columns = [];
-
-function createColumns() {
+(function createColumns() {
   for (let x = 0; x < COLS; x++) {
-    let offset = random(1000);
+    let offset = random(100);
 
     columns.push(
       new Column(
         x,
-        Array(random(5, 15)).fill()
-          .map((_, i) => new Letter(letterSet[random(letterSet.length - 1)], x, -i - offset)),
-        //random(2000, 2000)
+        Array(random(MIN_LENGTH, MAX_LENGTH)).fill()
+          .map((_, i) =>
+            new Letter(
+              LETTER_SET[random(LETTER_SET.length - 1)],
+              x,
+              -i - offset,
+            )
+          ),
       )
     )
-    
   }
-}
-createColumns();
+})();
 
-// setInterval(() => {
-//   createColumns();
-// }, random(5000, 1000))
-
-
-function check() {
+(function check() {
   requestAnimationFrame(check);
-  
+  draw();
+  insertNewColumns();
+})();
+
+function insertNewColumns() {
   columns.forEach((column, x) => {
-    if (column.letters.every(letter => letter.y > ROWS)) {
+    if (
+      column.letters.every(letter => letter.y > canvas.height / 20) ||
+      column.letters.every(letter => letter.opac <= 0)
+    ) {
       columns.splice(
         x,
         1,
         new Column(
           x,
-          Array(random(5, 15)).fill()
-            .map((_, i) => new Letter(
-              letterSet[random(letterSet.length - 1)],
-              x,
-              -i)
+          Array(random(MIN_LENGTH, MAX_LENGTH)).fill()
+            .map((_, i) =>
+              new Letter(
+                LETTER_SET[random(LETTER_SET.length - 1)],
+                x,
+                -i
+              )
             ),
-          //random(2000, 2000)
-        ))
+        )
+      )
+      // debugger;
     }
-  })
-}check();
-
+  }
+  )
+}
 
 setInterval(() => {
   move();
@@ -103,11 +112,14 @@ function move() {
 
 function draw() {
   ctx.font = "1px Arial";
-  
+
   columns.forEach((column, i) => {
     column.letters.forEach((letter, j) => {
-      ctx.fillStyle = `rgba(0, 255, 0, ${1 - 0.02 * letter.y})`;
-      ctx.fillText(letter.char, letter.x, letter.y + 1);
+      if (letter.y > 0) {
+        letter.opac -= Math.random() * OPAC_FACTOR * letter.y;
+        ctx.fillStyle = `rgba(0, 255, 0, ${letter.opac})`;
+        ctx.fillText(letter.char, letter.x, letter.y + 1);
+      }
     })
   })
 }
