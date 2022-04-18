@@ -10,7 +10,7 @@ onload = () => {
 (function update() {
   requestAnimationFrame(update);
   Char.move();
-  Char.swapRandomChars();
+  Char.swapRandomCharsAndOpacity();
   Char.draw();
   Column.insertNewColumns();
 })();
