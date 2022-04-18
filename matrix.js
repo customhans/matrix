@@ -3,17 +3,13 @@ import Char from "./lib/chars.js";
 import Column from "./lib/columns.js";
 
 onload = () => {
-  ctx.scale(15, 15);
+  ctx.scale(17, 17);
   Column.createStartColumns();
-
-  setInterval(() => {
-    Char.move();
-    Char.draw();
-  }, 100)
 }
 
 (function update() {
   requestAnimationFrame(update);
+  Char.move();
   Char.draw();
   Column.insertNewColumns();
 })();
