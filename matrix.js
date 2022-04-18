@@ -1,13 +1,13 @@
 const canvas = document.querySelector("canvas");
-canvas.width = 2000;
-canvas.height = 4000;
+canvas.width = 200;
+canvas.height = 400;
 const ctx = canvas.getContext("2d");
 ctx.scale(20, 20);
-const COLS = 100;
-const ROWS = 200;
-const MIN_LENGTH = canvas.height / 20;
+const COLS = 10;
+const ROWS = 20;
+const MIN_LENGTH = (canvas.height / 20) / 5;
 const MAX_LENGTH = canvas.height / 20;
-const OPAC_FACTOR = 0.00025;
+const OPAC_FACTOR = 0.002;
 let columns = [];
 
 //const LETTER_SET = "abcdefghijklmnopqrstuvwxyz".split("");
