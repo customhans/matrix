@@ -1,10 +1,10 @@
 const canvas = document.querySelector("canvas");
-canvas.width = 200;
-canvas.height = 400;
+canvas.width = innerWidth;
+canvas.height = innerHeight;
 const ctx = canvas.getContext("2d");
 ctx.scale(20, 20);
-const COLS = 10;
-const ROWS = 20;
+const COLS = canvas.width / 20;
+const ROWS = canvas.height / 20;
 const MIN_LENGTH = (canvas.height / 20) / 5;
 const MAX_LENGTH = canvas.height / 20;
 const OPAC_FACTOR = 0.002;
@@ -75,7 +75,7 @@ drawCanvas();
 function insertNewColumns() {
   columns.forEach((column, x) => {
     if (
-      column.chars.every(char => char.y > canvas.height / 20) ||
+      column.chars.every(char => char.y > canvas.height) ||
       column.chars.every(char => char.opac <= 0)
     ) {
       columns.splice(
@@ -84,19 +84,17 @@ function insertNewColumns() {
         new Column(
           x,
           Array(random(MIN_LENGTH, MAX_LENGTH)).fill()
-            .map((_, i) =>
-              new Char(
-                CHAR_SET[random(CHAR_SET.length - 1)],
-                x,
-                -i
-              )
-            ),
+          .map((_, i) =>
+            new Char(
+              CHAR_SET[random(CHAR_SET.length - 1)],
+              x,
+              -i
+            )
+          ),
         )
       )
-      // debugger;
     }
-  }
-  )
+  })
 }
 
 setInterval(() => {
@@ -109,7 +107,7 @@ function move() {
   columns.forEach(column => {
     column.chars.forEach(char => {
       char.y++;
-    });
+    })
   })
 }
 
@@ -119,9 +117,11 @@ function draw() {
   columns.forEach((column, i) => {
     column.chars.forEach((char, j) => {
       if (char.y > 0) {
-        char.opac -= Math.random() * OPAC_FACTOR * char.y;
         ctx.fillStyle = `rgba(0, 255, 0, ${char.opac})`;
         ctx.fillText(char.char, char.x, char.y + 1);
+      }
+      if (char.y > canvas.height / random(25, 22)) {
+        char.opac -= Math.random() * OPAC_FACTOR * char.y;
       }
     })
   })
