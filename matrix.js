@@ -11,8 +11,8 @@ const OPAC_FACTOR = 0.002;
 const FONT = "1px Arial";
 let columns = [];
 
-//const LETTER_SET = "abcdefghijklmnopqrstuvwxyz".split("");
-const LETTER_SET = "0123456789".split("");
+//const CHAR_SET = "abcdefghijklmnopqrstuvwxyz".split("");
+const CHAR_SET = "0123456789".split("");
 
 function random(max, min = 0) {
   min = Math.ceil(min);
@@ -22,13 +22,13 @@ function random(max, min = 0) {
 
 
 class Column {
-  constructor(x, letters) {
+  constructor(x, chars) {
     this.x = x;
-    this.letters = letters;
+    this.chars = chars;
   }
 }
 
-class Letter {
+class Char {
   constructor(char, x, y) {
     this.char = char;
     this.x = x;
@@ -55,8 +55,8 @@ drawCanvas();
         x,
         Array(random(MIN_LENGTH, MAX_LENGTH)).fill()
           .map((_, i) =>
-            new Letter(
-              LETTER_SET[random(LETTER_SET.length - 1)],
+            new Char(
+              CHAR_SET[random(CHAR_SET.length - 1)],
               x,
               -i - offset,
             )
@@ -75,8 +75,8 @@ drawCanvas();
 function insertNewColumns() {
   columns.forEach((column, x) => {
     if (
-      column.letters.every(letter => letter.y > canvas.height / 20) ||
-      column.letters.every(letter => letter.opac <= 0)
+      column.chars.every(char => char.y > canvas.height / 20) ||
+      column.chars.every(char => char.opac <= 0)
     ) {
       columns.splice(
         x,
@@ -85,8 +85,8 @@ function insertNewColumns() {
           x,
           Array(random(MIN_LENGTH, MAX_LENGTH)).fill()
             .map((_, i) =>
-              new Letter(
-                LETTER_SET[random(LETTER_SET.length - 1)],
+              new Char(
+                CHAR_SET[random(CHAR_SET.length - 1)],
                 x,
                 -i
               )
@@ -107,8 +107,8 @@ setInterval(() => {
 
 function move() {
   columns.forEach(column => {
-    column.letters.forEach(letter => {
-      letter.y++;
+    column.chars.forEach(char => {
+      char.y++;
     });
   })
 }
@@ -117,11 +117,11 @@ function draw() {
   ctx.font = FONT;
 
   columns.forEach((column, i) => {
-    column.letters.forEach((letter, j) => {
-      if (letter.y > 0) {
-        letter.opac -= Math.random() * OPAC_FACTOR * letter.y;
-        ctx.fillStyle = `rgba(0, 255, 0, ${letter.opac})`;
-        ctx.fillText(letter.char, letter.x, letter.y + 1);
+    column.chars.forEach((char, j) => {
+      if (char.y > 0) {
+        char.opac -= Math.random() * OPAC_FACTOR * char.y;
+        ctx.fillStyle = `rgba(0, 255, 0, ${char.opac})`;
+        ctx.fillText(char.char, char.x, char.y + 1);
       }
     })
   })
