@@ -8,6 +8,7 @@ const ROWS = 20;
 const MIN_LENGTH = (canvas.height / 20) / 5;
 const MAX_LENGTH = canvas.height / 20;
 const OPAC_FACTOR = 0.002;
+const FONT = "1px Arial";
 let columns = [];
 
 //const LETTER_SET = "abcdefghijklmnopqrstuvwxyz".split("");
@@ -43,8 +44,10 @@ function drawCanvas() {
 drawCanvas();
 
 
-(function createColumns() {
+(function createStartColumns() {
   for (let x = 0; x < COLS; x++) {
+
+    // add this to y-pos to get random entry times
     let offset = random(100);
 
     columns.push(
@@ -111,7 +114,7 @@ function move() {
 }
 
 function draw() {
-  ctx.font = "1px Arial";
+  ctx.font = FONT;
 
   columns.forEach((column, i) => {
     column.letters.forEach((letter, j) => {
